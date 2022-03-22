@@ -120,10 +120,12 @@ class ApiController extends Controller
     }
     public function deletetodos($id)
     {
-        $todos = todo::where('id',$id)->delete();
+        $user = user::where('id',$id)->first();
+        $user->token = null;
+        $user->save;
         return response()->json([
             'success' => true,
-            'message' => 'Data Success Deleted',
+            'message' => 'Logout Success',
         ],200);
     }
 
