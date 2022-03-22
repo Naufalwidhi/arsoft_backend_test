@@ -55,8 +55,16 @@ class ApiController extends Controller
         }
     }
 
-    public function getalltodos()
+    public function getalltodos(Request $request)
     {
+        $token = $request->header("token");
+        $user = user::all();
+        if($token != $user->token){
+            return response()->json([
+                "status" => false,
+                "message" => "Token Expired Please Login Again"
+            ], 200);
+        }
         $data = todo::all();
         return response()->json([
             "status" => true,
@@ -120,6 +128,15 @@ class ApiController extends Controller
     }
     public function deletetodos($id)
     {
+        $todo = todo::where('id',$id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Logout Success',
+        ],200);
+    }
+    public function logout()
+    {
+        $id = 1;
         $user = user::where('id',$id)->first();
         $user->token = null;
         $user->save;
